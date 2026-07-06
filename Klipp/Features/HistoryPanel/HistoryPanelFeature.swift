@@ -33,7 +33,7 @@ enum HistoryPanelFeature {
 
     static func panelSize(for state: State) -> CGSize {
         switch state.mode {
-        case .compact: return CGSize(width: 420, height: 480)
+        case .compact: return CGSize(width: 520, height: 480)
         case .full: return CGSize(width: 700, height: 480)
         }
     }

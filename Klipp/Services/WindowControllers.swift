@@ -64,8 +64,8 @@ enum AppWindows {
 
     static let preferences = HostedWindowController(
         title: String(localized: .klippPreferences),
-        size: NSSize(width: 400, height: 280),
-        minSize: NSSize(width: 380, height: 260)
+        size: NSSize(width: 580, height: 520),
+        minSize: NSSize(width: 540, height: 480)
     )
 
     static let about = HostedWindowController(

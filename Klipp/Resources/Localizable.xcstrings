@@ -232,6 +232,17 @@
         }
       }
     },
+    "defaultPanelViewCaption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose how much detail appears when history opens."
+          }
+        }
+      }
+    },
     "delete" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -320,6 +331,17 @@
         }
       }
     },
+    "keepItemsForCaption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatically clear older clipboard history."
+          }
+        }
+      }
+    },
     "keyboardShortcut" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -327,6 +349,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Keyboard shortcut"
+          }
+        }
+      }
+    },
+    "keyboardShortcutCaption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open clipboard history from anywhere."
           }
         }
       }
@@ -349,6 +382,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Launch at login"
+          }
+        }
+      }
+    },
+    "launchAtLoginCaption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start Klipp automatically when you sign in."
           }
         }
       }
@@ -624,6 +668,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Storage used"
+          }
+        }
+      }
+    },
+    "storageUsedCaption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Current local clipboard database size."
           }
         }
       }

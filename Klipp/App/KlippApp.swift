@@ -43,14 +43,6 @@ struct KlippApp: App {
             Divider()
 
             Button {
-                store.send(.togglePauseTapped)
-            } label: {
-                Text(store.state.isPaused
-                    ? String(localized: .resumeKlipp)
-                    : String(localized: .pauseKlipp))
-            }
-
-            Button {
                 store.send(.clearHistoryTapped)
             } label: {
                 Text(String(localized: .clearHistoryEllipsis))
@@ -78,7 +70,7 @@ struct KlippApp: App {
             }
             .keyboardShortcut("q", modifiers: [.command])
         } label: {
-            Image(systemName: store.state.isPaused ? "paperclip.badge.ellipsis" : "paperclip")
+            Image(systemName: "paperclip")
         }
         .commands {
             CommandGroup(replacing: .appSettings) {

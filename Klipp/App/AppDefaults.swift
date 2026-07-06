@@ -15,6 +15,7 @@ enum AppDefaults {
         static let hotKeyKeyCode = "hotKeyKeyCode"
         static let hotKeyModifiers = "hotKeyModifiers"
         static let isMonitoringPaused = "isMonitoringPaused"
+        static let hasRegisteredLaunchAtLogin = "hasRegisteredLaunchAtLogin"
     }
 
     static func register() {
@@ -23,7 +24,8 @@ enum AppDefaults {
             Keys.panelMode: PanelMode.compact.rawValue,
             Keys.hotKeyKeyCode: Int(KeyShortcut.defaultShortcut.keyCode),
             Keys.hotKeyModifiers: Int(KeyShortcut.defaultShortcut.carbonModifiers),
-            Keys.isMonitoringPaused: false
+            Keys.isMonitoringPaused: false,
+            Keys.hasRegisteredLaunchAtLogin: false
         ])
     }
 
@@ -63,5 +65,10 @@ enum AppDefaults {
     static var isMonitoringPaused: Bool {
         get { UserDefaults.standard.bool(forKey: Keys.isMonitoringPaused) }
         set { UserDefaults.standard.set(newValue, forKey: Keys.isMonitoringPaused) }
+    }
+
+    static var hasRegisteredLaunchAtLogin: Bool {
+        get { UserDefaults.standard.bool(forKey: Keys.hasRegisteredLaunchAtLogin) }
+        set { UserDefaults.standard.set(newValue, forKey: Keys.hasRegisteredLaunchAtLogin) }
     }
 }

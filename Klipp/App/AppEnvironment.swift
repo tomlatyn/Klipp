@@ -68,6 +68,11 @@ final class AppEnvironment {
 
         hotKey.register(AppDefaults.hotKeyShortcut)
 
+        if !AppDefaults.hasRegisteredLaunchAtLogin {
+            try? LaunchAtLoginService.setEnabled(true)
+            AppDefaults.hasRegisteredLaunchAtLogin = true
+        }
+
         cleanupExpired(retention: AppDefaults.retentionPeriod)
         workQueue.async { [clipStore] in
             clipStore.cleanupOrphanedImages()
