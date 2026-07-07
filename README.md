@@ -14,6 +14,10 @@
   <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License">
 </p>
 
+<p align="center">
+  <img src="Assets/panel.png" width="760" alt="Klipp history panel">
+</p>
+
 ---
 
 ## What is Klipp?
