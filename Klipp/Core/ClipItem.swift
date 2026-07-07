@@ -49,6 +49,7 @@ struct ClipItem: Identifiable, Equatable, Codable {
     var sourceAppName: String?
     var createdAt: Date
     var lastUsedAt: Date?
+    var isPinned: Bool = false
 }
 
 extension ClipItem {

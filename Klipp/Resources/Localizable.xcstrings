@@ -95,7 +95,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "All stored items, including images, will be permanently deleted. This cannot be undone."
+            "value" : "All unpinned items, including images, will be permanently deleted. Pinned items are kept. This cannot be undone."
           }
         }
       }
@@ -557,7 +557,18 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Permanently deletes every stored item."
+            "value" : "Permanently deletes every unpinned item. Pinned items are kept."
+          }
+        }
+      }
+    },
+    "pin" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pin"
           }
         }
       }
@@ -690,6 +701,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Toggle preview pane (⇥)"
+          }
+        }
+      }
+    },
+    "unpin" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unpin"
           }
         }
       }

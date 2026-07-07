@@ -28,6 +28,7 @@ enum HistoryPanelFeature {
         case activateSelected
         case activateIndex(Int)
         case deleteItem(String)
+        case togglePin(String)
         case toggleMode
     }
 
@@ -120,6 +121,11 @@ enum HistoryPanelFeature {
             }
             return .fireAndForget {
                 AppEnvironment.shared.deleteItem(id: id)
+            }
+
+        case .togglePin(let id):
+            return .fireAndForget {
+                AppEnvironment.shared.togglePin(id: id)
             }
 
         case .toggleMode:

@@ -103,6 +103,12 @@ final class AppEnvironment {
         }
     }
 
+    func togglePin(id: String) {
+        workQueue.async { [clipStore] in
+            clipStore.togglePin(id: id)
+        }
+    }
+
     func clearHistory() {
         workQueue.async { [clipStore] in
             clipStore.clearAll()
