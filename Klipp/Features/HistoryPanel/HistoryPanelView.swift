@@ -145,7 +145,8 @@ struct HistoryPanelView: View {
                             isSelected: item.id == store.state.panel.selectedID,
                             shortcutIndex: index < 9 ? index + 1 : nil,
                             onTap: { store.send(.panel(.itemClicked(item.id))) },
-                            onDelete: { store.send(.panel(.deleteItem(item.id))) }
+                            onDelete: { store.send(.panel(.deleteItem(item.id))) },
+                            onTogglePin: { store.send(.panel(.togglePin(item.id))) }
                         )
                         .id(item.id)
                     }
@@ -179,6 +180,7 @@ struct HistoryPanelView: View {
         HStack(spacing: AppTheme.Spacing.large) {
             hint(symbol: "↑↓", label: String(localized: .navigate))
             hint(symbol: "↩", label: String(localized: .copy))
+            hint(symbol: "⌘P", label: String(localized: .pin))
             hint(symbol: "⇥", label: String(localized: .view))
             hint(symbol: "⎋", label: String(localized: .close))
 

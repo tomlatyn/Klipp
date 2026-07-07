@@ -16,6 +16,7 @@ extension ClipItem: FetchableRecord, PersistableRecord {
         static let contentHash = Column("contentHash")
         static let createdAt = Column("createdAt")
         static let type = Column("type")
+        static let isPinned = Column("isPinned")
     }
 }
 
@@ -56,6 +57,7 @@ final class ClipStore {
                 t.column("sourceAppName", .text)
                 t.column("createdAt", .datetime).notNull().indexed()
                 t.column("lastUsedAt", .datetime)
+                t.column("isPinned", .boolean).notNull().defaults(to: false)
             }
         }
         try migrator.migrate(dbQueue)
@@ -64,8 +66,7 @@ final class ClipStore {
     func startObserving(onChange: @escaping ([ClipItem]) -> Void) {
         let observation = ValueObservation.tracking { db in
             try ClipItem
-                .order(ClipItem.Columns.createdAt.desc)
-                .limit(Self.maxItemCount)
+                .order(ClipItem.Columns.isPinned.desc, ClipItem.Columns.createdAt.desc)
                 .fetchAll(db)
         }
 
@@ -112,7 +113,8 @@ final class ClipStore {
             sourceAppBundleID: capture.sourceAppBundleID,
             sourceAppName: capture.sourceAppName,
             createdAt: now,
-            lastUsedAt: nil
+            lastUsedAt: nil,
+            isPinned: false
         )
 
         if let pngData = capture.imagePNGData {
@@ -140,6 +142,15 @@ final class ClipStore {
         }
     }
 
+    func togglePin(id: String) {
+        try? dbQueue.write { db in
+            if var item = try ClipItem.fetchOne(db, key: id) {
+                item.isPinned.toggle()
+                try item.update(db)
+            }
+        }
+    }
+
     func fetchItem(id: String) -> ClipItem? {
         try? dbQueue.read { db in
             try ClipItem.fetchOne(db, key: id)
@@ -157,10 +168,17 @@ final class ClipStore {
     }
 
     func clearAll() {
-        try? dbQueue.write { db in
-            _ = try ClipItem.deleteAll(db)
-        }
-        imageStore.removeAll()
+        let filenames: [String] = (try? dbQueue.write { db in
+            let removed = try ClipItem
+                .filter(ClipItem.Columns.isPinned == false)
+                .fetchAll(db)
+            try ClipItem
+                .filter(ClipItem.Columns.isPinned == false)
+                .deleteAll(db)
+            return Self.imageFilenames(of: removed)
+        }) ?? []
+
+        imageStore.deleteFiles(filenames)
     }
 
     func cleanupExpired(retention: RetentionPeriod) {
@@ -168,10 +186,10 @@ final class ClipStore {
 
         let filenames: [String] = (try? dbQueue.write { db in
             let expired = try ClipItem
-                .filter(ClipItem.Columns.createdAt < cutoff)
+                .filter(ClipItem.Columns.createdAt < cutoff && ClipItem.Columns.isPinned == false)
                 .fetchAll(db)
             try ClipItem
-                .filter(ClipItem.Columns.createdAt < cutoff)
+                .filter(ClipItem.Columns.createdAt < cutoff && ClipItem.Columns.isPinned == false)
                 .deleteAll(db)
             return Self.imageFilenames(of: expired)
         }) ?? []
@@ -189,12 +207,15 @@ final class ClipStore {
     }
 
     private static func enforceItemCap(_ db: Database) throws -> [String] {
-        let count = try ClipItem.fetchCount(db)
-        guard count > maxItemCount else { return [] }
+        let unpinnedCount = try ClipItem
+            .filter(ClipItem.Columns.isPinned == false)
+            .fetchCount(db)
+        guard unpinnedCount > maxItemCount else { return [] }
 
         let overflow = try ClipItem
+            .filter(ClipItem.Columns.isPinned == false)
             .order(ClipItem.Columns.createdAt.asc)
-            .limit(count - maxItemCount)
+            .limit(unpinnedCount - maxItemCount)
             .fetchAll(db)
 
         for item in overflow {

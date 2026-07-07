@@ -14,6 +14,7 @@ struct ClipRowView: View {
     var shortcutIndex: Int?
     var onTap: () -> Void
     var onDelete: () -> Void
+    var onTogglePin: () -> Void
 
     private static let relativeFormatter: RelativeDateTimeFormatter = {
         let formatter = RelativeDateTimeFormatter()
@@ -32,6 +33,12 @@ struct ClipRowView: View {
                 .truncationMode(.tail)
 
             Spacer(minLength: AppTheme.Spacing.small)
+
+            if item.isPinned {
+                Image(systemName: "pin.fill")
+                    .font(.system(size: 10))
+                    .foregroundStyle(Color.secondaryText)
+            }
 
             if let shortcutIndex {
                 Text("⌘\(shortcutIndex)")
@@ -52,6 +59,12 @@ struct ClipRowView: View {
         .contentShape(Rectangle())
         .onTapGesture(perform: onTap)
         .contextMenu {
+            Button(action: onTogglePin) {
+                Label(
+                    item.isPinned ? String(localized: .unpin) : String(localized: .pin),
+                    systemImage: item.isPinned ? "pin.slash" : "pin"
+                )
+            }
             Button(String(localized: .delete), role: .destructive, action: onDelete)
         }
     }

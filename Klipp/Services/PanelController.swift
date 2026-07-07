@@ -157,6 +157,13 @@ final class PanelController: NSObject, NSWindowDelegate {
                 return nil
             }
 
+            if hasCommand, event.keyCode == 35 {
+                if let selectedID = store.state.panel.selectedID {
+                    store.send(.panel(.togglePin(selectedID)))
+                }
+                return nil
+            }
+
             switch event.keyCode {
             case 53:
                 store.send(.panel(.close))
