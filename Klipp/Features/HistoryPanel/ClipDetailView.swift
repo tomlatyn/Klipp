@@ -57,12 +57,14 @@ struct ClipDetailView: View {
                     Link(text, destination: url)
                         .font(AppTheme.Fonts.rowCaption)
                         .lineLimit(6)
+                        .multilineTextAlignment(.leading)
                 } else {
                     Text(item.textContent ?? "")
                         .font(AppTheme.Fonts.rowCaption)
                         .foregroundStyle(Color.primaryText)
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
 
         case .image:
             if let filename = item.imageFilename,
