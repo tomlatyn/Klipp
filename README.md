@@ -1,4 +1,8 @@
-# Klipp
+<p align="center">
+  <img src="Klipp/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-512.png" width="128" alt="Klipp icon">
+</p>
+
+<h1 align="center">Klipp</h1>
 
 <p align="center">
   A lightweight macOS menu bar clipboard manager for text, links, images, and files.
