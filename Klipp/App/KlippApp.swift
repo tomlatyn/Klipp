@@ -15,6 +15,10 @@ struct KlippApp: App {
     @StateObject private var store: KlippStore
 
     init() {
+        #if DEBUG
+        ScreenshotRenderer.renderIfRequested()
+        #endif
+
         AppDefaults.register()
 
         let store = KlippStore(
