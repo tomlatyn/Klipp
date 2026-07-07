@@ -210,6 +210,17 @@
         }
       }
     },
+    "copyAsPlainText" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy as Plain Text"
+          }
+        }
+      }
+    },
     "copyright" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -569,6 +580,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pin"
+          }
+        }
+      }
+    },
+    "plain" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plain"
           }
         }
       }

@@ -27,6 +27,7 @@ enum HistoryPanelFeature {
         case itemClicked(String)
         case activateSelected
         case activateIndex(Int)
+        case copyItemPlain(String)
         case deleteItem(String)
         case togglePin(String)
         case toggleMode
@@ -106,10 +107,14 @@ enum HistoryPanelFeature {
             guard let id = state.panel.selectedID else { return .none }
             return activate(id: id, state: &state)
 
+
         case .activateIndex(let index):
             let items = visibleItems(state)
             guard items.indices.contains(index) else { return .none }
             return activate(id: items[index].id, state: &state)
+
+        case .copyItemPlain(let id):
+            return activate(id: id, plain: true, state: &state)
 
         case .deleteItem(let id):
             let items = visibleItems(state)
@@ -138,14 +143,14 @@ enum HistoryPanelFeature {
         }
     }
 
-    private static func activate(id: String, state: inout KlippFeature.State) -> Effect<KlippFeature.Action> {
+    private static func activate(id: String, plain: Bool = false, state: inout KlippFeature.State) -> Effect<KlippFeature.Action> {
         state.panel.isVisible = false
         return .fireAndForget {
             let environment = AppEnvironment.shared
             PanelController.shared.hide()
 
             guard let item = environment.clipStore.fetchItem(id: id) else { return }
-            environment.clipboardWriter.write(item)
+            environment.clipboardWriter.write(item, plain: plain)
             environment.clipStore.touch(id: id)
         }
     }
