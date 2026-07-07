@@ -64,6 +64,7 @@ final class AppEnvironment {
         }
 
         monitor.isPaused = AppDefaults.isMonitoringPaused
+        monitor.ignoredBundleIDs = Set(AppDefaults.ignoredApps.map(\.bundleID))
         monitor.start()
 
         hotKey.register(AppDefaults.hotKeyShortcut)

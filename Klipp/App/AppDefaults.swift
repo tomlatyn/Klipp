@@ -16,6 +16,7 @@ enum AppDefaults {
         static let hotKeyModifiers = "hotKeyModifiers"
         static let isMonitoringPaused = "isMonitoringPaused"
         static let hasRegisteredLaunchAtLogin = "hasRegisteredLaunchAtLogin"
+        static let ignoredApps = "ignoredApps"
     }
 
     static func register() {
@@ -70,5 +71,19 @@ enum AppDefaults {
     static var hasRegisteredLaunchAtLogin: Bool {
         get { UserDefaults.standard.bool(forKey: Keys.hasRegisteredLaunchAtLogin) }
         set { UserDefaults.standard.set(newValue, forKey: Keys.hasRegisteredLaunchAtLogin) }
+    }
+
+    static var ignoredApps: [IgnoredApp] {
+        get {
+            guard let data = UserDefaults.standard.data(forKey: Keys.ignoredApps),
+                  let apps = try? JSONDecoder().decode([IgnoredApp].self, from: data) else {
+                return []
+            }
+            return apps
+        }
+        set {
+            let data = try? JSONEncoder().encode(newValue)
+            UserDefaults.standard.set(data, forKey: Keys.ignoredApps)
+        }
     }
 }

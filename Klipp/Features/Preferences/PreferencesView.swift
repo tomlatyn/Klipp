@@ -115,6 +115,33 @@ struct PreferencesView: View {
                         }
                     }
                 }
+
+                preferencesSection(title: String(localized: .privacy)) {
+                    preferencesCard {
+                        preferenceRow(
+                            title: String(localized: .ignoredApps),
+                            caption: String(localized: .ignoredAppsCaption)
+                        ) {
+                            Button {
+                                store.send(.preferences(.addIgnoredAppTapped))
+                            } label: {
+                                Text(String(localized: .addEllipsis))
+                                    .frame(width: 76)
+                            }
+                            .controlSize(.small)
+                        }
+
+                        if store.state.preferences.ignoredApps.isEmpty {
+                            rowDivider
+                            emptyIgnoredApps
+                        } else {
+                            ForEach(store.state.preferences.ignoredApps) { app in
+                                rowDivider
+                                ignoredAppRow(app)
+                            }
+                        }
+                    }
+                }
             }
             .padding(.horizontal, 26)
             .padding(.vertical, 24)
@@ -136,6 +163,49 @@ struct PreferencesView: View {
             .fill(Color.divider)
             .frame(height: 1)
             .padding(.horizontal, 18)
+    }
+
+    private var emptyIgnoredApps: some View {
+        Text(String(localized: .noIgnoredApps))
+            .font(AppTheme.Fonts.rowCaption)
+            .foregroundStyle(Color.secondaryText)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 18)
+            .padding(.vertical, 14)
+    }
+
+    private func ignoredAppRow(_ app: IgnoredApp) -> some View {
+        HStack(spacing: 10) {
+            Image(nsImage: Self.icon(for: app.bundleID))
+                .resizable()
+                .frame(width: 22, height: 22)
+
+            Text(app.name)
+                .font(.system(size: 13))
+                .foregroundStyle(Color.primaryText)
+
+            Spacer(minLength: 16)
+
+            Button {
+                store.send(.preferences(.removeIgnoredApp(app.bundleID)))
+            } label: {
+                Image(systemName: "minus.circle.fill")
+                    .font(.system(size: 15))
+                    .foregroundStyle(Color.secondaryText)
+            }
+            .buttonStyle(.plain)
+            .help(String(localized: .removeFromIgnored))
+        }
+        .padding(.horizontal, 18)
+        .padding(.vertical, 10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private static func icon(for bundleID: String) -> NSImage {
+        if let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleID) {
+            return NSWorkspace.shared.icon(forFile: url.path)
+        }
+        return NSImage(systemSymbolName: "app.dashed", accessibilityDescription: nil) ?? NSImage()
     }
 
     private func preferencesSection<Content: View>(
