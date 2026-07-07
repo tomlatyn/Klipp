@@ -34,6 +34,17 @@
         }
       }
     },
+    "addEllipsis" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add…"
+          }
+        }
+      }
+    },
     "all" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -74,6 +85,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancel"
+          }
+        }
+      }
+    },
+    "choose" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose"
+          }
+        }
+      }
+    },
+    "chooseAppToIgnore" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose an app to ignore"
           }
         }
       }
@@ -309,6 +342,28 @@
         }
       }
     },
+    "ignoredApps" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ignored Apps"
+          }
+        }
+      }
+    },
+    "ignoredAppsCaption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klipp won't save anything copied from these apps."
+          }
+        }
+      }
+    },
     "imagePreviewFormat" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -507,6 +562,17 @@
         }
       }
     },
+    "noIgnoredApps" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No apps ignored"
+          }
+        }
+      }
+    },
     "noMatches" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -606,6 +672,17 @@
         }
       }
     },
+    "privacy" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy"
+          }
+        }
+      }
+    },
     "quitKlipp" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -613,6 +690,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Quit Klipp"
+          }
+        }
+      }
+    },
+    "removeFromIgnored" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove from ignored apps"
           }
         }
       }

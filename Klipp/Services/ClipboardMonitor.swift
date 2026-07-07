@@ -30,6 +30,7 @@ final class ClipboardMonitor {
 
     var onCapture: ((ClipboardCapture) -> Void)?
     var isPaused = false
+    var ignoredBundleIDs: Set<String> = []
 
     private var timer: Timer?
     private var lastChangeCount = NSPasteboard.general.changeCount
@@ -64,9 +65,14 @@ final class ClipboardMonitor {
             return
         }
 
+        let frontmost = NSWorkspace.shared.frontmostApplication
+
+        if let bundleID = frontmost?.bundleIdentifier, ignoredBundleIDs.contains(bundleID) {
+            return
+        }
+
         guard var capture = Self.readCapture(from: pasteboard) else { return }
 
-        let frontmost = NSWorkspace.shared.frontmostApplication
         capture.sourceAppBundleID = frontmost?.bundleIdentifier
         capture.sourceAppName = frontmost?.localizedName
 

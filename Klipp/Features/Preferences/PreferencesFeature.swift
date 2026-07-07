@@ -15,6 +15,7 @@ enum PreferencesFeature {
         var isRecordingShortcut = false
         var defaultPanelMode = AppDefaults.panelMode
         var retention = AppDefaults.retentionPeriod
+        var ignoredApps = AppDefaults.ignoredApps
         var storageBytes: Int?
 
         mutating func refreshFromSystem() {
@@ -22,6 +23,7 @@ enum PreferencesFeature {
             shortcut = AppDefaults.hotKeyShortcut
             defaultPanelMode = AppDefaults.panelMode
             retention = AppDefaults.retentionPeriod
+            ignoredApps = AppDefaults.ignoredApps
             isRecordingShortcut = false
             storageBytes = nil
         }
@@ -36,6 +38,9 @@ enum PreferencesFeature {
         case recordingCancelled
         case setDefaultPanelMode(PanelMode)
         case setRetention(RetentionPeriod)
+        case addIgnoredAppTapped
+        case ignoredAppAdded(IgnoredApp)
+        case removeIgnoredApp(String)
         case storageSizeComputed(Int)
     }
 
@@ -103,6 +108,33 @@ enum PreferencesFeature {
             return .fireAndForget {
                 AppDefaults.retentionPeriod = retention
                 AppEnvironment.shared.cleanupExpired(retention: retention)
+            }
+
+        case .addIgnoredAppTapped:
+            return Effect { send in
+                if let app = AppPicker.pickApplication() {
+                    send(.preferences(.ignoredAppAdded(app)))
+                }
+            }
+
+        case .ignoredAppAdded(let app):
+            guard !state.preferences.ignoredApps.contains(where: { $0.bundleID == app.bundleID }) else {
+                return .none
+            }
+            state.preferences.ignoredApps.append(app)
+            state.preferences.ignoredApps.sort { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+            let ignoredApps = state.preferences.ignoredApps
+            return .fireAndForget {
+                AppDefaults.ignoredApps = ignoredApps
+                AppEnvironment.shared.monitor.ignoredBundleIDs = Set(ignoredApps.map(\.bundleID))
+            }
+
+        case .removeIgnoredApp(let bundleID):
+            state.preferences.ignoredApps.removeAll { $0.bundleID == bundleID }
+            let ignoredApps = state.preferences.ignoredApps
+            return .fireAndForget {
+                AppDefaults.ignoredApps = ignoredApps
+                AppEnvironment.shared.monitor.ignoredBundleIDs = Set(ignoredApps.map(\.bundleID))
             }
 
         case .storageSizeComputed(let bytes):
