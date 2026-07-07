@@ -15,6 +15,7 @@ struct ClipRowView: View {
     var onTap: () -> Void
     var onDelete: () -> Void
     var onTogglePin: () -> Void
+    var onCopyPlain: () -> Void
 
     private static let relativeFormatter: RelativeDateTimeFormatter = {
         let formatter = RelativeDateTimeFormatter()
@@ -64,6 +65,11 @@ struct ClipRowView: View {
                     item.isPinned ? String(localized: .unpin) : String(localized: .pin),
                     systemImage: item.isPinned ? "pin.slash" : "pin"
                 )
+            }
+            if item.rtfData != nil {
+                Button(action: onCopyPlain) {
+                    Label(String(localized: .copyAsPlainText), systemImage: "textformat")
+                }
             }
             Button(String(localized: .delete), role: .destructive, action: onDelete)
         }

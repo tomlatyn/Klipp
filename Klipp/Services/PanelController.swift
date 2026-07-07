@@ -175,7 +175,12 @@ final class PanelController: NSObject, NSWindowDelegate {
                 store.send(.panel(.moveSelection(-1)))
                 return nil
             case 36, 76:
-                store.send(.panel(.activateSelected))
+                if event.modifierFlags.contains(.option),
+                   let selectedID = store.state.panel.selectedID {
+                    store.send(.panel(.copyItemPlain(selectedID)))
+                } else {
+                    store.send(.panel(.activateSelected))
+                }
                 return nil
             case 51, 117:
                 guard store.state.panel.searchText.isEmpty,

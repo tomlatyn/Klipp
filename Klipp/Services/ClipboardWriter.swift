@@ -18,7 +18,7 @@ final class ClipboardWriter {
         self.monitor = monitor
     }
 
-    func write(_ item: ClipItem) {
+    func write(_ item: ClipItem, plain: Bool = false) {
         let pasteboard = NSPasteboard.general
         pasteboard.clearContents()
 
@@ -27,10 +27,10 @@ final class ClipboardWriter {
             if let text = item.textContent {
                 pasteboard.setString(text, forType: .string)
             }
-            if let rtfData = item.rtfData {
+            if !plain, let rtfData = item.rtfData {
                 pasteboard.setData(rtfData, forType: .rtf)
             }
-            if item.type == .link, let text = item.textContent, let url = URL(string: text) {
+            if !plain, item.type == .link, let text = item.textContent, let url = URL(string: text) {
                 (url as NSURL).write(to: pasteboard)
             }
 
