@@ -5,6 +5,7 @@
 //  Created by Tomáš Latýn on 06.07.2026.
 //
 
+import AppKit
 import SwiftUI
 
 struct PreferencesView: View {
@@ -149,6 +150,9 @@ struct PreferencesView: View {
         .scrollIndicators(.hidden)
         .background(.ultraThinMaterial)
         .frame(minWidth: 540, idealWidth: 580, minHeight: 480, idealHeight: 520, alignment: .topLeading)
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
+            store.send(.preferences(.refreshLaunchAtLogin))
+        }
     }
 
     private var storageText: String {

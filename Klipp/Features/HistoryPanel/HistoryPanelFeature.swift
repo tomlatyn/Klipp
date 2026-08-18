@@ -27,6 +27,9 @@ enum HistoryPanelFeature {
         case itemClicked(String)
         case activateSelected
         case activateIndex(Int)
+        case copySelected
+        case pasteSelectedPlain
+        case copyItem(String)
         case copyItemPlain(String)
         case deleteItem(String)
         case togglePin(String)
@@ -72,6 +75,7 @@ enum HistoryPanelFeature {
             state.panel.isVisible = true
             state.panel.selectedID = visibleItems(state).first?.id
             return .fireAndForget {
+                AppEnvironment.shared.pasteService.prepareForPanel()
                 PanelController.shared.show()
             }
 
@@ -101,20 +105,30 @@ enum HistoryPanelFeature {
             return .none
 
         case .itemClicked(let id):
-            return activate(id: id, state: &state)
+            return activate(id: id, shouldPaste: true, state: &state)
 
         case .activateSelected:
             guard let id = state.panel.selectedID else { return .none }
-            return activate(id: id, state: &state)
-
+            return activate(id: id, shouldPaste: true, state: &state)
 
         case .activateIndex(let index):
             let items = visibleItems(state)
             guard items.indices.contains(index) else { return .none }
-            return activate(id: items[index].id, state: &state)
+            return activate(id: items[index].id, shouldPaste: true, state: &state)
+
+        case .copySelected:
+            guard let id = state.panel.selectedID else { return .none }
+            return activate(id: id, shouldPaste: false, state: &state)
+
+        case .pasteSelectedPlain:
+            guard let id = state.panel.selectedID else { return .none }
+            return activate(id: id, plain: true, shouldPaste: true, state: &state)
+
+        case .copyItem(let id):
+            return activate(id: id, shouldPaste: false, state: &state)
 
         case .copyItemPlain(let id):
-            return activate(id: id, plain: true, state: &state)
+            return activate(id: id, plain: true, shouldPaste: false, state: &state)
 
         case .deleteItem(let id):
             let items = visibleItems(state)
@@ -143,7 +157,12 @@ enum HistoryPanelFeature {
         }
     }
 
-    private static func activate(id: String, plain: Bool = false, state: inout KlippFeature.State) -> Effect<KlippFeature.Action> {
+    private static func activate(
+        id: String,
+        plain: Bool = false,
+        shouldPaste: Bool,
+        state: inout KlippFeature.State
+    ) -> Effect<KlippFeature.Action> {
         state.panel.isVisible = false
         return .fireAndForget {
             let environment = AppEnvironment.shared
@@ -152,6 +171,10 @@ enum HistoryPanelFeature {
             guard let item = environment.clipStore.fetchItem(id: id) else { return }
             environment.clipboardWriter.write(item, plain: plain)
             environment.clipStore.touch(id: id)
+
+            if shouldPaste {
+                environment.pasteService.paste()
+            }
         }
     }
 }

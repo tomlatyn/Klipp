@@ -50,8 +50,12 @@ final class HostedWindowController: NSObject, NSWindowDelegate {
 
         let hostingView = NSHostingView(rootView: content())
         window?.contentView = hostingView
-        NSApp.activate(ignoringOtherApps: true)
+        NSApp.activate()
         window?.makeKeyAndOrderFront(nil)
+    }
+
+    func close() {
+        window?.close()
     }
 
     func windowWillClose(_ notification: Notification) {
@@ -71,6 +75,12 @@ enum AppWindows {
     static let about = HostedWindowController(
         title: String(localized: .aboutKlipp),
         size: NSSize(width: 300, height: 360),
+        isResizable: false
+    )
+
+    static let accessibilityPermission = HostedWindowController(
+        title: String(localized: .accessibilityAccess),
+        size: NSSize(width: 420, height: 280),
         isResizable: false
     )
 }

@@ -31,6 +31,8 @@ enum PreferencesFeature {
 
     enum Action {
         case setLaunchAtLogin(Bool)
+        case refreshLaunchAtLogin
+        case launchAtLoginStatusChanged(Bool)
         case launchAtLoginUpdateFailed(previousValue: Bool)
         case recordShortcutTapped
         case shortcutCaptured(KeyShortcut)
@@ -52,11 +54,32 @@ enum PreferencesFeature {
             state.preferences.launchAtLogin = enabled
             return Effect { send in
                 do {
-                    try LaunchAtLoginService.setEnabled(enabled)
+                    let result = try LaunchAtLoginService.setEnabled(enabled)
+                    let isEnabled = LaunchAtLoginService.isEnabled
+
+                    switch result {
+                    case .completed:
+                        AppDefaults.launchAtLogin = isEnabled
+                    case .requiresApproval:
+                        AppDefaults.launchAtLogin = false
+                    }
+
+                    send(.preferences(.launchAtLoginStatusChanged(isEnabled)))
                 } catch {
                     send(.preferences(.launchAtLoginUpdateFailed(previousValue: previousValue)))
                 }
             }
+
+        case .refreshLaunchAtLogin:
+            let isEnabled = LaunchAtLoginService.isEnabled
+            state.preferences.launchAtLogin = isEnabled
+            return .fireAndForget {
+                AppDefaults.launchAtLogin = isEnabled
+            }
+
+        case .launchAtLoginStatusChanged(let isEnabled):
+            state.preferences.launchAtLogin = isEnabled
+            return .none
 
         case .launchAtLoginUpdateFailed(let previousValue):
             state.preferences.launchAtLogin = previousValue

@@ -16,6 +16,7 @@ final class AppEnvironment {
     let clipStore: ClipStore
     let monitor: ClipboardMonitor
     let clipboardWriter: ClipboardWriter
+    let pasteService: PasteService
     let hotKey: HotKeyService
 
     weak var store: KlippStore?
@@ -42,6 +43,7 @@ final class AppEnvironment {
 
         monitor = ClipboardMonitor()
         clipboardWriter = ClipboardWriter(imageStore: imageStore, monitor: monitor)
+        pasteService = PasteService()
         hotKey = HotKeyService()
     }
 
@@ -66,13 +68,14 @@ final class AppEnvironment {
         monitor.isPaused = AppDefaults.isMonitoringPaused
         monitor.ignoredBundleIDs = Set(AppDefaults.ignoredApps.map(\.bundleID))
         monitor.start()
+        pasteService.start()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak pasteService] in
+            pasteService?.requestAccessibilityAccessIfNeeded()
+        }
 
         hotKey.register(AppDefaults.hotKeyShortcut)
 
-        if !AppDefaults.hasRegisteredLaunchAtLogin {
-            try? LaunchAtLoginService.setEnabled(true)
-            AppDefaults.hasRegisteredLaunchAtLogin = true
-        }
+        LaunchAtLoginService.reconcile(shouldEnable: AppDefaults.launchAtLogin)
 
         cleanupExpired(retention: AppDefaults.retentionPeriod)
         workQueue.async { [clipStore] in

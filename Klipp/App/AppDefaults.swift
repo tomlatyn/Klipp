@@ -15,18 +15,28 @@ enum AppDefaults {
         static let hotKeyKeyCode = "hotKeyKeyCode"
         static let hotKeyModifiers = "hotKeyModifiers"
         static let isMonitoringPaused = "isMonitoringPaused"
+        static let launchAtLogin = "launchAtLogin"
         static let hasRegisteredLaunchAtLogin = "hasRegisteredLaunchAtLogin"
         static let ignoredApps = "ignoredApps"
     }
 
     static func register() {
-        UserDefaults.standard.register(defaults: [
+        let defaults = UserDefaults.standard
+
+        if let bundleID = Bundle.main.bundleIdentifier,
+           let persistedDefaults = defaults.persistentDomain(forName: bundleID),
+           persistedDefaults[Keys.launchAtLogin] == nil,
+           persistedDefaults[Keys.hasRegisteredLaunchAtLogin] != nil {
+            defaults.set(LaunchAtLoginService.isEnabled, forKey: Keys.launchAtLogin)
+        }
+
+        defaults.register(defaults: [
             Keys.retentionPeriod: RetentionPeriod.sevenDays.rawValue,
             Keys.panelMode: PanelMode.compact.rawValue,
             Keys.hotKeyKeyCode: Int(KeyShortcut.defaultShortcut.keyCode),
             Keys.hotKeyModifiers: Int(KeyShortcut.defaultShortcut.carbonModifiers),
             Keys.isMonitoringPaused: false,
-            Keys.hasRegisteredLaunchAtLogin: false
+            Keys.launchAtLogin: true
         ])
     }
 
@@ -68,9 +78,9 @@ enum AppDefaults {
         set { UserDefaults.standard.set(newValue, forKey: Keys.isMonitoringPaused) }
     }
 
-    static var hasRegisteredLaunchAtLogin: Bool {
-        get { UserDefaults.standard.bool(forKey: Keys.hasRegisteredLaunchAtLogin) }
-        set { UserDefaults.standard.set(newValue, forKey: Keys.hasRegisteredLaunchAtLogin) }
+    static var launchAtLogin: Bool {
+        get { UserDefaults.standard.bool(forKey: Keys.launchAtLogin) }
+        set { UserDefaults.standard.set(newValue, forKey: Keys.launchAtLogin) }
     }
 
     static var ignoredApps: [IgnoredApp] {

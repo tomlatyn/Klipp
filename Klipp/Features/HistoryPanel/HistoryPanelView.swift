@@ -145,6 +145,7 @@ struct HistoryPanelView: View {
                             isSelected: item.id == store.state.panel.selectedID,
                             shortcutIndex: index < 9 ? index + 1 : nil,
                             onTap: { store.send(.panel(.itemClicked(item.id))) },
+                            onCopy: { store.send(.panel(.copyItem(item.id))) },
                             onDelete: { store.send(.panel(.deleteItem(item.id))) },
                             onTogglePin: { store.send(.panel(.togglePin(item.id))) },
                             onCopyPlain: { store.send(.panel(.copyItemPlain(item.id))) }
@@ -179,18 +180,26 @@ struct HistoryPanelView: View {
 
     private var footer: some View {
         HStack(spacing: AppTheme.Spacing.large) {
-            hint(symbol: "↑↓", label: String(localized: .navigate))
-            hint(symbol: "↩", label: String(localized: .copy))
+            if store.state.panel.mode == .full {
+                hint(symbol: "↑↓", label: String(localized: .navigate))
+            }
+
+            hint(symbol: "↩", label: String(localized: .paste))
+            hint(symbol: "⇧↩", label: String(localized: .copy))
             hint(symbol: "⌥↩", label: String(localized: .plain))
-            hint(symbol: "⌘P", label: String(localized: .pin))
-            hint(symbol: "⇥", label: String(localized: .view))
-            hint(symbol: "⎋", label: String(localized: .close))
+
+            if store.state.panel.mode == .full {
+                hint(symbol: "⌘P", label: String(localized: .pin))
+                hint(symbol: "⇥", label: String(localized: .view))
+            }
 
             Spacer()
 
-            Text(String(localized: .itemsCountFormat(visibleItems.count)))
-                .font(AppTheme.Fonts.metadata)
-                .foregroundStyle(Color.tertiaryText)
+            if store.state.panel.mode == .full {
+                Text(String(localized: .itemsCountFormat(visibleItems.count)))
+                    .font(AppTheme.Fonts.metadata)
+                    .foregroundStyle(Color.tertiaryText)
+            }
 
             Button(role: .destructive) {
                 store.send(.clearHistoryTapped)
@@ -216,5 +225,6 @@ struct HistoryPanelView: View {
                 .font(AppTheme.Fonts.metadata)
                 .foregroundStyle(Color.tertiaryText)
         }
+        .fixedSize(horizontal: true, vertical: false)
     }
 }

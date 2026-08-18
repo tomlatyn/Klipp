@@ -38,6 +38,9 @@ enum AppTheme {
     }
 
     enum Fonts {
+        static let permissionIcon = Font.system(size: 38, weight: .medium)
+        static let permissionTitle = Font.system(size: 18, weight: .semibold)
+
         /// 13 pt regular - Primary list row content.
         static let rowTitle = Font.system(size: 13)
 

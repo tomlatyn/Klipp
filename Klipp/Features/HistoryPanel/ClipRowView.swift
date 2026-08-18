@@ -13,6 +13,7 @@ struct ClipRowView: View {
     let isSelected: Bool
     var shortcutIndex: Int?
     var onTap: () -> Void
+    var onCopy: () -> Void
     var onDelete: () -> Void
     var onTogglePin: () -> Void
     var onCopyPlain: () -> Void
@@ -60,6 +61,9 @@ struct ClipRowView: View {
         .contentShape(Rectangle())
         .onTapGesture(perform: onTap)
         .contextMenu {
+            Button(action: onCopy) {
+                Label(String(localized: .copy), systemImage: "doc.on.doc")
+            }
             Button(action: onTogglePin) {
                 Label(
                     item.isPinned ? String(localized: .unpin) : String(localized: .pin),

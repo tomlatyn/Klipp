@@ -219,6 +219,7 @@ private struct ScreenshotPanel: View {
                     isSelected: item.id == selectedID,
                     shortcutIndex: index < 9 ? index + 1 : nil,
                     onTap: {},
+                    onCopy: {},
                     onDelete: {},
                     onTogglePin: {},
                     onCopyPlain: {}
@@ -232,11 +233,11 @@ private struct ScreenshotPanel: View {
     private var footer: some View {
         HStack(spacing: AppTheme.Spacing.large) {
             hint("↑↓", String(localized: .navigate))
-            hint("↩", String(localized: .copy))
+            hint("↩", String(localized: .paste))
+            hint("⇧↩", String(localized: .copy))
             hint("⌥↩", String(localized: .plain))
             hint("⌘P", String(localized: .pin))
             hint("⇥", String(localized: .view))
-            hint("⎋", String(localized: .close))
 
             Spacer()
 

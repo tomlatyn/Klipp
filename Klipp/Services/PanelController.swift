@@ -175,9 +175,10 @@ final class PanelController: NSObject, NSWindowDelegate {
                 store.send(.panel(.moveSelection(-1)))
                 return nil
             case 36, 76:
-                if event.modifierFlags.contains(.option),
-                   let selectedID = store.state.panel.selectedID {
-                    store.send(.panel(.copyItemPlain(selectedID)))
+                if event.modifierFlags.contains(.shift) {
+                    store.send(.panel(.copySelected))
+                } else if event.modifierFlags.contains(.option) {
+                    store.send(.panel(.pasteSelectedPlain))
                 } else {
                     store.send(.panel(.activateSelected))
                 }

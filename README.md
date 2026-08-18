@@ -28,7 +28,7 @@ Klipp is a small macOS menu bar clipboard manager. It records copied text, links
 
 - Menu bar app with no Dock icon
 - Global shortcut, default **Shift-Command-V**
-- Keyboard-first history panel with search, type filters, and quick selection
+- Keyboard-first history panel with search, type filters, and direct paste
 - Compact and full panel modes with previews and metadata
 - Automatic history cleanup after 1 day, 7 days, or 1 month
 - Privacy-aware handling for concealed and transient clipboard content
@@ -43,6 +43,9 @@ Klipp is a small macOS menu bar clipboard manager. It records copied text, links
 2. Open the `.dmg` and drag **Klipp** into your Applications folder.
 3. Launch Klipp from Applications — it will appear in your menu bar.
 4. Use **Shift-Command-V** to open clipboard history from anywhere.
+5. Grant Accessibility access when prompted so Klipp can paste into the active app.
+
+Press **Return** to paste the selected item, **Shift-Return** to copy it without pasting, or **Option-Return** to paste it as plain text.
 
 ## Contributing
 
